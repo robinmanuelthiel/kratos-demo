@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,13 @@ namespace KratosDemo.Server.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public string GetMe()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
     }
 }

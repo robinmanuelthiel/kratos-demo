@@ -18,9 +18,13 @@ const Home: React.FC<IHomeProps> = (props) => {
   const logout = async () => {
     await authService.logoutAsync();
   }
-  const callAPi = async () => {
+  const callWeatherForecastAPi = async () => {
     const forecast = await apiService.getWeatherForecastAsync();
     console.log('forecast', forecast);
+  }
+  const callMeAPi = async () => {
+    const me = await apiService.getMeAsync();
+    console.log('me', me);
   }
 
   return (
@@ -32,7 +36,8 @@ const Home: React.FC<IHomeProps> = (props) => {
       <br />      
       <button onClick={refreshSession}>Refresh</button>
       <br />      
-      <button onClick={callAPi}>Call REST API</button>
+      <button onClick={callWeatherForecastAPi}>Call REST API /weatherforecast</button>
+      <button onClick={callMeAPi}>Call REST API /weatherforecast/me</button>
       <br />      
       <button onClick={logout}>Logout</button>
     </div>
