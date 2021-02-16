@@ -16,6 +16,7 @@ namespace KratosDemo.Server.Kratos
     public class KratosAuthenticationHandler : AuthenticationHandler<KratosAuthenticationOptions>
     {        
         readonly KratosService _kratosService;
+        readonly string _sessionCookieName = "ory_kratos_session";
 
         public KratosAuthenticationHandler(
             IOptionsMonitor<KratosAuthenticationOptions> options, 
@@ -31,14 +32,18 @@ namespace KratosDemo.Server.Kratos
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            // ORY Kratos can authenticate against an API through two different methods:
+            // Cookie Authentication is for Browser Clients and sends a Session Cookie with each request.
+            // Bearer Token Authentication is for Native Apps and other APIs and sends an Authentication header with each request.
+            // We are validating both ways here by sending a /whoami request to ORY Kratos passing the provided authentication
+            // methos on to Kratos.
             try
-            {
+            {                
                 // Check, if Cookie was set
-                if (Request.Cookies.ContainsKey("ory_kratos_session"))
+                if (Request.Cookies.ContainsKey(_sessionCookieName))
                 {
-                    var cookie = Request.Cookies["ory_kratos_session"];
-                    var id = await _kratosService.GetUserIdByCookie("ory_kratos_session", cookie);
-                    Console.WriteLine("Success:" + id);
+                    var cookie = Request.Cookies[_sessionCookieName];
+                    var id = await _kratosService.GetUserIdByCookie(_sessionCookieName, cookie);
                     return ValidateToken(id);
                 }
 
@@ -47,14 +52,15 @@ namespace KratosDemo.Server.Kratos
                 {
                     var token = Request.Headers["Authorization"];
                     var id = await _kratosService.GetUserIdByToken(token);
-                    Console.WriteLine("Success:" + id);
                     return ValidateToken(id);
                 }
 
+                // If neither Cookie nor Authorization header was set, the request can't be authenticated.
                 return AuthenticateResult.NoResult();
             }
             catch (Exception ex)
             {
+                // If an error occurs while trying to validate the token, the Authentication request fails.
                 return AuthenticateResult.Fail(ex.Message);
             }
         }

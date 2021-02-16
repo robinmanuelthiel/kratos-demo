@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text.Json;
+using System;
 
 namespace KratosDemo.Server.Kratos
 {     
@@ -35,7 +36,11 @@ namespace KratosDemo.Server.Kratos
             res.EnsureSuccessStatusCode();
 
             var json = await res.Content.ReadAsStringAsync();
-            var whoami = JsonSerializer.Deserialize<Whoami>(json);            
+            var whoami = JsonSerializer.Deserialize<Whoami>(json);    
+            if (!whoami.Active)
+                throw new InvalidOperationException("Session is not active.");
+
+
             return whoami.Identity.Id;
         }
     }
