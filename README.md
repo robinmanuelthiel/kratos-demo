@@ -1,4 +1,4 @@
-# OTY Kratos Demo
+# ORY Kratos Demo
 
 ## Get it running
 
