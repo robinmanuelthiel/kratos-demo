@@ -36,8 +36,9 @@ const Home: React.FC<IHomeProps> = (props) => {
       <br />      
       <button onClick={refreshSession}>Refresh</button>
       <br />      
-      <button onClick={callWeatherForecastAPi}>Call REST API /weatherforecast</button>
-      <button onClick={callMeAPi}>Call REST API /weatherforecast/me</button>
+      <button onClick={callWeatherForecastAPi}>Call REST API /weatherforecast (public)</button>
+      <br />   
+      <button onClick={callMeAPi}>Call REST API /weatherforecast/me (private)</button>
       <br />      
       <button onClick={logout}>Logout</button>
     </div>
