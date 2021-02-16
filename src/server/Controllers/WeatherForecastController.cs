@@ -26,7 +26,6 @@ namespace KratosDemo.Server.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
